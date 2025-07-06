@@ -1,0 +1,23 @@
+.el-menu {
+  border-bottom: none !important;
+  background: transparent !important;
+
+  .el-menu-item {
+    background: transparent !important;
+    color: #000 !important;
+  }
+
+  .el-sub-menu__title {
+    color: #000 !important;
+  }
+
+  .el-sub-menu__title:hover {
+    background: transparent !important;
+  }
+}
+
+.el-card {
+  .el-card__body {
+    padding: 0 !important;
+  }
+}

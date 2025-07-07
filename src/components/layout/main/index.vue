@@ -11,7 +11,7 @@ import PageHeader from "@/components/page-header/index.vue";
 <template >
   <div class="main-container">
     <PageHeader></PageHeader>
-    <div class="max-w-[1280px] mx-auto ">
+    <div class="max-w-[1280px] mx-auto px-[40px] py-[60px]">
       <router-view></router-view>
     </div>
   </div>

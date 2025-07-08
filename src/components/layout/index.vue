@@ -1,6 +1,6 @@
-<template>
+<template >
   <Header />
-  <Main />
+  <Main style="background-color: black ;"/>
   <Footer />
 </template>
 

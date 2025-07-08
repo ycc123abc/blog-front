@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Components: typeof import('./src/components/index.vue')['default']
     copy: typeof import('./src/components/layout/hearder copy/index.vue')['default']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
@@ -18,6 +19,7 @@ declare module 'vue' {
     ElMenuItem: typeof import('element-plus/es')['ElMenuItem']
     ElRow: typeof import('element-plus/es')['ElRow']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
+    ElTag: typeof import('element-plus/es')['ElTag']
     Footer: typeof import('./src/components/layout/footer/index.vue')['default']
     Header: typeof import('./src/components/layout/header/index.vue')['default']
     Hearder: typeof import('./src/components/layout/hearder/index.vue')['default']

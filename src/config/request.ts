@@ -1,4 +1,4 @@
-import axios from "axios/dist/axios";
+import axios from "axios";
 
 // 创建一个 axios 实例
 const http = axios.create({
@@ -14,11 +14,11 @@ const http = axios.create({
 
 // 添加请求拦截器
 http.interceptors.request.use(
-  function (config) {
+  function (config:any) {
     // 在发送请求之前做些什么
     return config;
   },
-  function (error) {
+  function (error:any) {
     // 对请求错误做些什么
     console.log(error);
     return Promise.reject(error);
@@ -27,14 +27,14 @@ http.interceptors.request.use(
 
 // 添加响应拦截器
 http.interceptors.response.use(
-  function (response) {
+  function (response:any) {
     // 对响应数据做点什么
     // dataAxios 是 axios 返回数据中的 data
     const dataAxios = response.data;
 
     return dataAxios;
   },
-  function (error) {
+  function (error:any) {
     // 对响应错误做点什么
     return Promise.reject(error);
   }

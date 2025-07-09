@@ -38,17 +38,20 @@
             <div class="title text-center">文章</div>
             <div class="value text-center">20</div>
           </div>
-              <div class="item">
+          <div class="item">
             <div class="label text-center">标签</div>
             <div class="value text-center">20</div>
           </div>
         </div>
+          <div class="flex justify-center mt-auto ">
+          <el-button type="primary" round class="mb-[1.2rem]" @click="window.open('https://github.com', '_blank')">GitHub</el-button>
+          </div>
       </el-card>
 
     </el-col>
   </el-row>
   <div class="flex-center">
-  <el-button   round color="#87CEEB" size="big">查看更多</el-button>
+    <el-button round color="#87CEEB" size="big" @click="$router.push('/blog')">查看更多</el-button>
   </div>
 </template>
 
@@ -59,6 +62,7 @@ import type { ArticleItem } from '@/types/article';
 import { useRouter } from "vue-router";
 import { onMounted, } from "vue";
 import Homebanner from "@/assets/images/home-banner.png";
+declare const window: Window & typeof globalThis;
 const articleList = ref<ArticleItem[]>([{
   id: "1",
   title: "这是一篇文章",

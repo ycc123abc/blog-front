@@ -10,6 +10,16 @@ import "@/styles/base.scss";
 import "element-plus/theme-chalk/dark/css-vars.css";
 // 样式
 import "element-plus/dist/index.css";
-const app = createApp(App);
-app.use(router).use(createPinia().use(piniaPluginPersistedstate)).mount("#app");
 
+
+import Particles from "@tsparticles/vue3";
+import { loadFull } from "tsparticles";
+
+const app = createApp(App);
+app.use(router).use(createPinia().use(piniaPluginPersistedstate))
+
+app.use(Particles, {
+  init: async (engine) => {
+    await loadFull(engine);
+  },
+}).mount("#app");

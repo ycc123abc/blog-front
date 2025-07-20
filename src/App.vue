@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { ref } from "vue";
+
 const particlesOptions = {
   background: {
     color: "#282c34",

@@ -3,17 +3,18 @@ import type {
   ApiResponse,
   ArticleListResult,
   ArticleDetail,
-  ArticleListParams
+  ArticleListParams,
+  ArticleHomeListResult
 } from "@/types/article";
 
-export const getArticleHomeList = (): Promise<ApiResponse<ArticleListResult>> => {
-  return http.post("/api/article/homelist");
+export const getArticleHomeList = (): Promise<ArticleHomeListResult> => {
+  return http.get("/articles/homelist/");
 };
 
 export const getArticleList = (
   data: ArticleListParams
 ): Promise<ApiResponse<ArticleListResult>> => {
-  return http.post("/api/article/list", data);
+  return http.get("/api/article/list/");
 };
 
 

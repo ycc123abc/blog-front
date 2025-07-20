@@ -23,3 +23,41 @@ export const user = defineStore("user", {
     },
   },
 });
+
+interface Article {
+  id: string;
+  title: string;
+  cover?: string;
+  createtime: string;
+  views: number;
+  likes: number;
+  category: string; // 修正拼写
+  tags?: string[];
+  
+}
+
+export const articleStore=defineStore("article",{
+state:()=>{
+  return {
+    article:{
+      id:"",
+      title:"",
+      cover:"",
+      createtime:"",
+      views:0,
+      likes:0,
+      category:"",
+      tags:[]}
+    }},    
+    getters:{
+      getArticle():Article{
+          return this.article ;
+      },
+    },
+    actions:{
+      setArticle(val:Article){
+        Object.assign(this.article, val); // 正确使用对象合并方法
+      }
+    }
+}
+  )

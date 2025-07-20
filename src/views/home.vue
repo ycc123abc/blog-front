@@ -1,6 +1,8 @@
 <template>
   <el-row :gutter="20">
     <el-col :span="18" class="space-y-6">
+        <div v-if="articleList.length === 0">无数据</div>
+  <div v-else>已加载 {{ articleList.length }} 篇文章</div>
       <el-card v-for="article in articleList" shadow="hover">
         <div class="article-item w-[100%] md:h-[18rem] flex md:flex-row flex-col overflow-hidden ">
           <div class="article-cover md:w-[45%] md:h-[100%] w-[100%] h-[50%] overflow-hidden">
@@ -8,15 +10,13 @@
           </div>
           <div class="article-content w-[55%] h-[100%] p-[1.2rem] flex flex-col justify-center">
             <div class="space-y-6">
-
               <div class="title text-3xl">{{ article.title }}</div>
-              <div class="summary text-4xl">{{ article.summary }}</div>
             </div>
             <div class="flex flex-row justify-between mt-auto">
-              <div class="create-time text-sm">{{ article.createTime }}</div>
+              <div class="create-time text-sm">{{ article.create_time }}</div>
               <div class="label flex flex-row space-x-2 ">
-                <el-tag v-for="label in article.label" :key="label" type='info' effect="dark">
-                  {{ label }}
+                <el-tag v-for="tag in article.tags" :key="tag" type='info' effect="dark">
+                  {{ tag }}
                 </el-tag>
               </div>
             </div>
@@ -59,45 +59,22 @@
 import { ref } from 'vue';
 import { getArticleHomeList } from '@/api/article';
 import type { ArticleItem } from '@/types/article';
-import { useRouter } from "vue-router";
-import { onMounted, } from "vue";
+// import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 import Homebanner from "@/assets/images/home-banner.png";
 declare const window: Window & typeof globalThis;
-const articleList = ref<ArticleItem[]>([{
-  id: "1",
-  title: "这是一篇文章",
-  summary: "这是一篇文章的摘要",
-  cover: Homebanner,
-  createTime: "2021-01-01",
-  label: ["前端", "后端"]
-}, {
-  id: "2",
-  title: "这是一篇文章",
-  summary: "这是一篇文章的摘要",
-  cover: Homebanner,
-  createTime: "2021-01-01",
-  label: ["前端", "后端"]
-}, {
-  id: "3",
-  title: "这是一篇文章",
-  summary: "这是一篇文章的摘要",
-  cover: Homebanner,
-  createTime: "2021-01-01",
-  label: ["前端", "后端"]
-}
+const articleList = ref<ArticleItem[]>([
 ]);
 
 const conditionGetArticleList = async (): Promise<void> => {
   const res = await getArticleHomeList();
-  if (res.success) {
-    articleList.value = res.result.list;
-  }
+  articleList.value = res.items;
 };
-const router = useRouter();
-const gotoArticle = (id: string) => {
-  if (!id) return;
-  router.push({ path: "/article", query: { id } });
-};
+// const router = useRouter();
+// const gotoArticle = (id: string) => {
+//   if (!id) return;
+//   router.push({ path: "/articles/list/", query: { id } });
+// };
 
 onMounted(() => {
   conditionGetArticleList();

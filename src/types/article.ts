@@ -9,24 +9,35 @@ export interface ApiResponse<T> {
 export interface ArticleItem {
   id: string;
   title: string;
-  summary?: string;
   cover?: string;
-  createTime: string;
-  label?: string[];
+  create_time: string;
+  update_time: string;
+  tags?: string[];
   // 根据实际返回字段补充
+  views: number;
+  favor: number;
 }
 
-// 文章列表响应类型
+// 文章页面列表响应类型
 export interface ArticleListResult {
-  list: ArticleItem[];
+  items: ArticleItem[];
   total?: number;
+  page?: number;
+  size?: number;
+  total_pages?: number;
+}
+
+//文章首页列表
+export interface ArticleHomeListResult {
+  items: ArticleItem[];
 }
 
 // 文章详情类型
 export interface ArticleDetail extends ArticleItem {
-  content: string;
-  author?: string;
-  tags?: string[];
+  content: string| undefined;
+  author?: string | undefined;
+  tags?: string[] | undefined;
+ article_content: string ;
   // 其他详情字段...
 }
 
@@ -35,5 +46,6 @@ export interface ArticleListParams {
   page?: number;
   size?: number;
   category?: string;
+  
   // 其他查询参数...
 }

@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div>blog</div>
+  <div></div>
 </template>
 
 <style scoped>

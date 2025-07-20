@@ -2,9 +2,9 @@ import axios from "axios";
 
 // 创建一个 axios 实例
 const http = axios.create({
- baseURL: "http://localhost:8080",
+ baseURL: "http://127.0.0.1:8000",
   timeout: 10000, // 请求超时时间毫秒
-  withCredentials: true, // 异步请求携带cookie
+  withCredentials: false, // 异步请求携带cookie
   headers: {
     // 设置后端需要的传参类型
     "Content-Type": "application/json",
@@ -16,7 +16,9 @@ const http = axios.create({
 http.interceptors.request.use(
   function (config:any) {
     // 在发送请求之前做些什么
+    console.log(config);
     return config;
+    
   },
   function (error:any) {
     // 对请求错误做些什么
@@ -31,7 +33,7 @@ http.interceptors.response.use(
     // 对响应数据做点什么
     // dataAxios 是 axios 返回数据中的 data
     const dataAxios = response.data;
-
+    console.log(response.data)
     return dataAxios;
   },
   function (error:any) {

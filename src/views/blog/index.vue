@@ -1,27 +1,22 @@
 <template>
   <div class="blog-page">
-    <!-- 页面标题 -->
-    <div class="page-header">
-      <h1>博客</h1>
-    </div>
-
     <!-- 博客列表 -->
     <div class="blog-container">
       <el-row :gutter="20">
         <el-col 
-          v-for="(blog, index) in paginatedBlogs" 
-          :key="index" 
+          v-for="blog in blogList?.items" 
+          :key="blog.id" 
           :span="8" 
           class="blog-card"
         >
           <el-card shadow="hover">
-            <img 
-              :src="blog.cover" 
-              alt="Cover" 
-              class="cover-image"
-            />
+            <div class="card-cover" :style="{ backgroundImage: 'url(' + blog.cover + ')' }">
+              <div class="cover-overlay">
+                <h3>{{ blog.title }}</h3>
+              </div>
+            </div>
+            
             <div class="card-content">
-              <h3>{{ blog.title }}</h3>
               <div class="tags">
                 <el-tag 
                   v-for="(tag, tagIndex) in blog.tags" 
@@ -33,7 +28,7 @@
                 </el-tag>
               </div>
               <div class="meta">
-                <span>{{ formatDate(blog.createTime) }}</span>
+                <span>{{ blog.create_time }}</span>
               </div>
             </div>
           </el-card>
@@ -46,10 +41,10 @@
       <el-pagination
         background
         layout="prev, pager, next, jumper"
-        :total="blogList.length"
+        :total="total"
         :page-size="pageSize"
         :current-page="currentPage"
-        :pager-count="5"  
+        :pager-count="5"
         @current-change="handlePageChange"
       />
     </div>
@@ -57,143 +52,92 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-
-interface BlogItem {
-  title: string;
-  tags: string[];
-  createTime: Date;
-  cover: string;
-}
-
+import { ref,onMounted  } from 'vue';
+import type  {ArticlePageResult} from "@/types/article"
+import { getArticleList } from '@/api/article';
 // 分页参数
 const pageSize = 9; // 每页显示9个项目 (3x3布局)
 const currentPage = ref(1);
+const total = ref(0);
 
-// 模拟博客数据 (补充到10个)
-const blogList = ref<BlogItem[]>([
-  {
-    title: 'Vue3 新特性解析',
-    tags: ['前端', 'Vue'],
-    createTime: new Date('2023-10-01'),
-    cover: 'https://via.placeholder.com/300x200?text=Vue3'
-  },
-  {
-    title: 'TypeScript 高级技巧',
-    tags: ['TypeScript', '编程'],
-    createTime: new Date('2023-09-15'),
-    cover: 'https://via.placeholder.com/300x200?text=TS'
-  },
-  {
-    title: 'CSS Grid 布局指南',
-    tags: ['CSS', '布局'],
-    createTime: new Date('2023-08-22'),
-    cover: 'https://via.placeholder.com/300x200?text=CSS'
-  },
-  {
-    title: 'Node.js 性能优化',
-    tags: ['Node.js', '后端'],
-    createTime: new Date('2023-07-30'),
-    cover: 'https://via.placeholder.com/300x200?text=Node'
-  },
-  {
-    title: '响应式设计实践',
-    tags: ['响应式', 'UI'],
-    createTime: new Date('2023-06-18'),
-    cover: 'https://via.placeholder.com/300x200?text=Responsive'
-  },
-  {
-    title: 'Webpack 配置详解',
-    tags: ['构建工具', 'Webpack'],
-    createTime: new Date('2023-05-10'),
-    cover: 'https://via.placeholder.com/300x200?text=Webpack'
-  },
-  {
-    title: '前端安全最佳实践',
-    tags: ['安全', '前端'],
-    createTime: new Date('2023-04-05'),
-    cover: 'https://via.placeholder.com/300x200?text=Security'
-  },
-  {
-    title: '状态管理方案对比',
-    tags: ['Vuex', 'Pinia'],
-    createTime: new Date('2023-03-15'),
-    cover: 'https://via.placeholder.com/300x200?text=State'
-  },
-  {
-    title: '微前端架构实践',
-    tags: ['微前端', '架构'],
-    createTime: new Date('2023-02-28'),
-    cover: 'https://via.placeholder.com/300x200?text=MicroFE'
-  },
-  {
-    title: 'React 18 新特性',
-    tags: ['React', '前端'],
-    createTime: new Date('2023-01-15'),
-    cover: 'https://via.placeholder.com/300x200?text=React'
-  },
-    {
-    title: 'React 18 新特性',
-    tags: ['React', '前端'],
-    createTime: new Date('2023-01-15'),
-    cover: 'https://via.placeholder.com/300x200?text=React'
+// 模拟博客数据 (9个)
+const blogList = ref<ArticlePageResult>();
+
+const fetchBlogList  = async (): Promise<void> => {
+try{
+  const params = {
+      page: currentPage.value,
+      size: pageSize
+    };
+    const res = await getArticleList(params);
+
+      blogList.value = res;
+      console.log(111111111111,blogList.value)
+      total.value = (res.total_pages || 0) * pageSize;
+    //   console.log(blogList.value.items);
+      console.log(111111111,res.total_pages);
+    
+  } catch (error) {
+    console.error("获取博客列表失败:", error);
   }
-]);
+}
 
-// 计算当前页显示的数据
-const paginatedBlogs = computed(() => {
-  const start = (currentPage.value - 1) * pageSize;
-  const end = start + pageSize;
-  return blogList.value.slice(start, end);
-});
 
 // 日期格式化
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
+// const formatDate = (date: string) => {
+//   return date.toLocaleDateString('zh-CN', {
+//     year: 'numeric',
+//     month: 'long',
+//     day: 'numeric'
+//   });
+// };
 
 // 分页变化处理
 const handlePageChange = (page: number) => {
   currentPage.value = page;
-  // 在实际应用中，这里可以添加滚动到顶部的功能
+  fetchBlogList();
+  console.log(currentPage.value);
+  // 可选：添加滚动到顶部功能
   // window.scrollTo({ top: 0, behavior: 'smooth' });
 };
+
+onMounted(() => {
+  fetchBlogList();
+});
 </script>
 
 <style scoped>
-.blog-page {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.page-header {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.page-header h1 {
-  font-size: 2rem;
-  color: #333;
-}
-
 .blog-container {
   margin-bottom: 30px;
 }
 
 .blog-card {
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
-.cover-image {
+.blog-card:hover {
+  transform: translateY(-5px);
+  transition: transform 0.3s ease;
+}
+
+.card-cover {
+  position: relative;
   width: 100%;
   height: 180px;
-  object-fit: cover;
+  background-size: cover;
+  background-position: center;
   border-radius: 4px 4px 0 0;
+}
+
+.cover-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+  color: white;
+  padding: 10px 15px;
 }
 
 .card-content {
@@ -201,12 +145,17 @@ const handlePageChange = (page: number) => {
 }
 
 .card-content h3 {
-  margin: 10px 0;
-  font-size: 1.2rem;
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tags {
   margin: 10px 0;
+  min-height: 24px;
 }
 
 .tags .el-tag {
@@ -215,9 +164,21 @@ const handlePageChange = (page: number) => {
 
 .meta {
   display: flex;
+  justify-content: space-between;
   align-items: center;
   color: #999;
   font-size: 0.9rem;
+}
+
+.stats {
+  display: flex;
+  gap: 10px;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .pagination-container {
@@ -226,17 +187,27 @@ const handlePageChange = (page: number) => {
   margin-top: 20px;
 }
 
-/* 修复分页按钮文字颜色问题 */
+/* 覆盖分页组件页码样式 */
 .el-pagination.is-background .el-pager li:not(.disabled) {
-  color: #606266; /* 非激活状态文字颜色 */
-}
-
-.el-pagination.is-background .el-pager li:not(.disabled).active {
-  background-color: #409eff;
-  color: white; /* 激活状态文字颜色 */
+  background-color: #409eff; /* 保持蓝色背景 */
+  color: white; /* 设置页码文字为白色 */
+  border-radius: 2px;
 }
 
 .el-pagination.is-background .el-pager li:not(.disabled):hover {
-  color: #409eff; /* 悬停状态文字颜色 */
+  color: #fff; /* 悬停时仍保持白色 */
+}
+
+.el-pagination.is-background .el-pager li:not(.disabled).active {
+  background-color: #1890ff; /* 激活页码背景色 */
+  color: white;
+}
+
+.el-pagination.is-background .el-pager li {
+  width: 36px;
+  height: 32px;
+  line-height: 32px;
+  border-radius: 4px;
+  font-size: 14px;
 }
 </style>

@@ -18,14 +18,7 @@ export interface ArticleItem {
   favor: number;
 }
 
-// 文章页面列表响应类型
-export interface ArticleListResult {
-  items: ArticleItem[];
-  total?: number;
-  page?: number;
-  size?: number;
-  total_pages?: number;
-}
+
 
 //文章首页列表
 export interface ArticleHomeListResult {
@@ -41,11 +34,26 @@ export interface ArticleDetail extends ArticleItem {
   // 其他详情字段...
 }
 
-// 文章列表请求参数类型
-export interface ArticleListParams {
+// 翻页返回参数类型
+export interface PageResult {
+  page: number;
+  total_pages: number;
+}
+
+
+// 文章页面列表响应类型
+export interface ArticlePageResult extends PageResult {
+  items: ArticleItem[];
+}
+
+// 翻页请求参数类型
+export interface PageParams {
   page?: number;
   size?: number;
-  category?: string;
-  
-  // 其他查询参数...
+}
+
+// 文章页面列表请求参数类型
+export interface ArticlePageParams extends PageParams{
+  sort?: string;
+  search_fields?:string[]
 }
